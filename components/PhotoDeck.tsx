@@ -4,23 +4,29 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
-const pics = [
-  "https://images.unsplash.com/photo-1770643770962-7937094987a9?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1770885653473-ca48b4d69173?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1769867360185-0f91f999d571?q=80&w=1065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1770650777008-d4eab4103ff8?q=80&w=984&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+type Slide =
+  | { kind: "text"; text: string }
+  | { kind: "image"; src: string };
+
+const slides: Slide[] = [
+  { kind: "text", text: "Where it started" },
+  { kind: "image", src: "/young1.jpeg" },
+  { kind: "image", src: "/old1.jpeg" },
+  { kind: "image", src: "/young2.jpeg" },
+  { kind: "image", src: "/old2.jpeg" },
+  { kind: "text", text: "Wrinkles, White Hair, Same us.\nGrow old with me?" },
 ];
 
 export default function PhotoDeck() {
   const [active, setActive] = useState(0);
 
   const cards = useMemo(() => {
-    return pics.map((src, i) => {
+    return slides.map((slide, i) => {
       const offset = i - active;
       const isActive = i === active;
 
       return {
-        src,
+        slide,
         i,
         offset,
         isActive,
@@ -48,16 +54,29 @@ export default function PhotoDeck() {
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
           >
             <div className="absolute inset-0 bg-white/5" />
-            <Image
-              src={c.src}
-              alt={`photo ${c.i + 1}`}
-              fill
-              className="object-cover"
-              priority={c.i === 0}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15" />
+            {c.slide.kind === "image" ? (
+              <>
+                <Image
+                  src={c.slide.src}
+                  alt={`photo ${c.i + 1}`}
+                  fill
+                  className="object-cover"
+                  priority={c.i === 0}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15" />
+              </>
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-white/18 via-white/8 to-white/6 backdrop-blur-md" />
+            )}
+            {c.slide.kind === "text" && (
+              <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
+                <p className="whitespace-pre-line text-lg font-semibold leading-relaxed text-white/95 md:text-2xl">
+                  {c.slide.text}
+                </p>
+              </div>
+            )}
             <div className="absolute bottom-3 left-3 rounded-xl bg-black/35 px-3 py-1 text-xs text-white/85 ring-1 ring-white/10">
-              {c.i + 1} / {pics.length}
+              {c.i + 1} / {slides.length}
             </div>
           </motion.button>
         ))}
@@ -65,13 +84,13 @@ export default function PhotoDeck() {
 
       <div className="mt-4 flex items-center justify-center gap-2">
         <button
-          onClick={() => setActive((a) => (a - 1 + pics.length) % pics.length)}
+          onClick={() => setActive((a) => (a - 1 + slides.length) % slides.length)}
           className="rounded-xl bg-white/8 px-4 py-2 text-xs font-semibold ring-1 ring-white/15 hover:bg-white/10"
         >
           Prev
         </button>
         <button
-          onClick={() => setActive((a) => (a + 1) % pics.length)}
+          onClick={() => setActive((a) => (a + 1) % slides.length)}
           className="rounded-xl bg-white/12 px-4 py-2 text-xs font-semibold ring-1 ring-white/20 hover:bg-white/16"
         >
           Next
