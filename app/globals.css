@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg1: #0b0612;
+  --bg2: #140625;
+  --bg3: #2a0a2a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(255, 62, 152, 0.25), transparent 55%),
+              radial-gradient(900px 700px at 85% 30%, rgba(124, 77, 255, 0.20), transparent 55%),
+              radial-gradient(800px 700px at 40% 90%, rgba(255, 180, 70, 0.18), transparent 55%),
+              linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg3));
+  color: white;
+  overflow: hidden;
+}
+
+/* glass card */
+.glass {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  backdrop-filter: blur(14px);
+}
+
+/* fancy gradient text */
+.grad-text {
+  background: linear-gradient(90deg, #ff4fd8, #ffcc70, #7c4dff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s ease infinite;
+}
+
+.button-shine {
+  position: relative;
+  overflow: hidden;
+}
+.button-shine::after {
+  content: "";
+  position: absolute;
+  inset: -120% -40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: rotate(20deg);
+  animation: shine 2.8s ease-in-out infinite;
+}
+@keyframes shine {
+  0% { transform: translateX(-40%) rotate(20deg); opacity: 0; }
+  30% { opacity: 1; }
+  60% { transform: translateX(40%) rotate(20deg); opacity: 0; }
+  100% { opacity: 0; }
 }
